@@ -4,8 +4,8 @@ import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
 import project4 from "@/assets/project-4.jpg";
-import project5 from "@/assets/project-5.jpg";
-import project6 from "@/assets/project-6.jpg";
+import project5 from "@/assets/project-5.png";
+import project6 from "@/assets/project-6.png";
 
 const ProjectsSection = () => {
   const projects = [
