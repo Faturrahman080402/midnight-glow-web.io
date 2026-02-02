@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Linkedin, Github, Twitter } from "lucide-react";
+import { Mail, Linkedin, Github, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -19,15 +20,31 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Message sent!",
         description: "Thank you for reaching out. I'll get back to you soon!",
       });
       setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,10 +74,10 @@ const ContactSection = () => {
       color: "hover:text-gray-400"
     },
     {
-      name: "X",
-      icon: Twitter,
-      url: "https://x.com/kaka76305",
-      color: "hover:text-blue-400"
+      name: "Instagram",
+      icon: Instagram,
+      url: "https://www.instagram.com/ftrachman14/",
+      color: "hover:text-pink-400"
     }
   ];
 
