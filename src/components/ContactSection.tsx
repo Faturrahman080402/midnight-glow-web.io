@@ -76,7 +76,7 @@ const ContactSection = () => {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://www.instagram.com/ftrachman14/",
+      url: "https://www.instagram.com/ftrachman14/?hl=en",
       color: "hover:text-pink-400"
     }
   ];
