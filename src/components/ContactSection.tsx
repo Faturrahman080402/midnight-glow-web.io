@@ -20,26 +20,55 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Trim inputs before submission
+    const trimmedData = {
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      message: formData.message.trim()
+    };
+
+    // Client-side validation
+    if (trimmedData.name.length < 2 || trimmedData.name.length > 100) {
+      toast({
+        title: "Invalid Name",
+        description: "Name must be between 2 and 100 characters.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (trimmedData.message.length < 10 || trimmedData.message.length > 5000) {
+      toast({
+        title: "Invalid Message",
+        description: "Message must be between 10 and 5000 characters.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      const { error } = await supabase
-        .from('contact_messages')
-        .insert({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message
-        });
+      const { data, error } = await supabase.functions.invoke('submit-contact', {
+        body: trimmedData
+      });
 
       if (error) throw error;
+      
+      // Check for application-level errors from the edge function
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       toast({
         title: "Message sent!",
         description: "Thank you for reaching out. I'll get back to you soon!",
       });
       setFormData({ name: "", email: "", message: "" });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error?.message || "Failed to send message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -108,6 +137,8 @@ const ContactSection = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    minLength={2}
+                    maxLength={100}
                     className="bg-secondary border-border/50 focus:border-primary/50 transition-colors"
                   />
                 </div>
@@ -119,6 +150,7 @@ const ContactSection = () => {
                     placeholder="Your Email"
                     value={formData.email}
                     onChange={handleChange}
+                    maxLength={255}
                     required
                     className="bg-secondary border-border/50 focus:border-primary/50 transition-colors"
                   />
@@ -131,6 +163,8 @@ const ContactSection = () => {
                     value={formData.message}
                     onChange={handleChange}
                     required
+                    minLength={10}
+                    maxLength={5000}
                     rows={6}
                     className="bg-secondary border-border/50 focus:border-primary/50 transition-colors resize-none"
                   />
