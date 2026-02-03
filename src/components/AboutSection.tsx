@@ -22,7 +22,7 @@ const AboutSection = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Photo Section */}
-          <div className="order-2 lg:order-1 flex justify-center">
+          <div className="order-1 flex justify-center">
             <div className="relative group">
               <div className="absolute -inset-4 bg-hero-gradient rounded-3xl blur opacity-30 group-hover:opacity-50 transition-all duration-300"></div>
               <img 
@@ -34,7 +34,7 @@ const AboutSection = () => {
           </div>
 
           {/* Content Section */}
-          <div className="order-1 lg:order-2 space-y-6">
+          <div className="order-2 space-y-6">
             <Card className="bg-card-gradient border-border/50 shadow-subtle-glow">
               <CardContent className="p-8">
                 <p className="text-lg text-muted-foreground leading-relaxed mb-6">
